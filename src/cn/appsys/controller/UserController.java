@@ -20,7 +20,7 @@ public class UserController {
 	@Resource
 	public UserService userService;
 	
-	@RequestMapping("/login")
+	@RequestMapping("/login")  
 	public String toMain() {
 		return "devlogin";
 	}
@@ -46,6 +46,4 @@ public class UserController {
 		session.invalidate();
 		return "redirect:/user/login";
 	}
-	
-	
 }

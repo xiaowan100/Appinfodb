@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.appsys.dao.deve.AppInfoMapper">
+	<select id="queryUserListPage" resultType="AppInfo">
+		SELECT
+		a.softwareName,a.APKName,a.softwareSize,
+		(
+		SELECT valueName FROM
+		data_dictionary WHERE typecode = 'APP_FLATFORM'
+		AND valueid =
+		a.flatformId
+		) flatformName,
+		(
+		SELECT categoryName FROM `app_category`
+		WHERE id = a.categoryLevel1
+		) categoryLevel1Name,
+		(
+		SELECT categoryName
+		FROM
+		`app_category` WHERE id = a.categoryLevel2
+		) categoryLevel2Name,
+		(
+		SELECT
+		categoryName FROM `app_category` WHERE id = a.categoryLevel3
+		)
+		categoryLevel3Name,
+		(
+		SELECT valueName FROM data_dictionary WHERE
+		typecode =
+		'APP_STATUS' AND
+		valueId = a.status
+		) statusName,a.downloads,
+		(
+		SELECT
+		versionNo FROM `app_version` WHERE id = a.versionId
+		) versionNo
+		FROM
+		app_info a
+		<where>
+			1=1
+			<if test="appinfo!= null">
+				<if test="appinfo.softwareName != null">
+					and softwareName like CONCAT('%', #{appinfo.softwareName} ,'%')
+				</if>
+				<if test="appinfo.status != null">
+					and status = #{appinfo.status}
+				</if>
+				<if test="appinfo.flatformName != null">
+					and flatformName = #{appinfo.flatformName}
+				</if>
+				<if test="appinfo.categoryLevel1Name != null">
+					and categoryLevel1Name = #{appinfo.categoryLevel1Name}
+				</if>
+				<if test="appinfo.categoryLevel2Name != null">
+					and categoryLevel2Name = #{appinfo.categoryLevel2Name}
+				</if>
+				<if test="appinfo.categoryLevel3Name != null">
+					and categoryLevel3Name = #{appinfo.categoryLevel3Name}
+				</if>
+			</if>
+		</where>
+		limit #{from},#{pageSize}
+	</select>
+
+	<select id="queryTotalCount" resultType="int">
+		select count(1) from app_info a
+		<where>
+			<if test="softwareName != null">
+				and a.softwareName like CONCAT('%', #{softwareName} ,'%')
+			</if>
+			<if test="status != null">
+				and a.status = #{status}
+			</if>
+			<if test="flatformName != null">
+				and flatformName = #{flatformName}
+			</if>
+			<if test="categoryLevel1Name != null">
+				and categoryLevel1Name = #{categoryLevel1Name}
+			</if>
+			<if test="categoryLevel2Name != null">
+				and categoryLevel2Name = #{categoryLevel2Name}
+			</if>
+			<if test="categoryLevel3Name != null">
+				and categoryLevel3Name = #{categoryLevel3Name}
+			</if>
+		</where>
+	</select>
+
+</mapper>
