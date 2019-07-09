@@ -32,8 +32,8 @@ public class UserController {
 		if (user == null) {
 			// 用户名不存在
 			request.getSession().setAttribute("error", "用户名或密码错误");
-			return "redirect:/user/login";
-		} else {
+			return "redirect:/user/login";  
+		} else {  
 			// 登录成功后，将用户名保存到Session作用域去
 			request.getSession().setAttribute("devUserSession", user);
 			request.getSession().setAttribute("id", user.getId());
